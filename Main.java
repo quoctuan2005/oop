@@ -1,6 +1,6 @@
 public class Main {
     public static String printHello() {
-            return "Sơn Ngu";
+            return "HelloWorld";
     }
     public static void main(String args[]) {
         String hello =  printHello();
