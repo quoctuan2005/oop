@@ -1,0 +1,127 @@
+import java.util.Scanner;
+
+public class Solution {
+    private int numerator;
+    private int denominator = 1;
+
+    public int getNumerator() {
+        return numerator;
+    }
+
+    public void setNumerator(int numerator) {
+        this.numerator = numerator;
+    }
+
+    public int getDenominator() {
+        return denominator;
+    }
+
+    public void setDenominator(int denominator) {
+        if (denominator != 0) {
+            this.denominator = denominator;
+        }
+    }
+
+    public Solution(int numerator, int denominator) {
+        if (denominator != 0) {
+            this.numerator = numerator;
+            this.denominator = denominator;
+        }
+    }
+
+    private int gcd(int a, int b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        if (b == 0) {
+            return a;
+        } else {
+            return gcd(b, a % b);
+        }
+    }
+
+    public Solution reduce() {
+        int gcd = gcd(numerator, denominator);
+        this.numerator /= gcd;
+        this.denominator /= gcd;
+        if (this.denominator < 0) {
+            this.numerator = this.numerator * -1;
+            this.denominator = this.denominator * -1;
+        }
+        return this;
+    }
+
+    public Solution add(Solution other) {
+        int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Solution(newNumerator, newDenominator).reduce();
+    }
+
+    public Solution subtract(Solution other) {
+        int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Solution(newNumerator, newDenominator).reduce();
+    }
+
+    public Solution multiply(Solution other) {
+        int newNumerator = this.numerator * other.numerator;
+        int newDenominator = this.denominator * other.denominator;
+        return new Solution(newNumerator, newDenominator).reduce();
+    }
+
+    public Solution divide(Solution other) {
+        int newNumerator = this.numerator * other.denominator;
+        int newDenominator = this.denominator * other.numerator;
+        return new Solution(newNumerator, newDenominator).reduce();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof Solution) {
+            Solution other = (Solution) obj;
+            this.reduce();
+            other.reduce();
+            return this.numerator == other.numerator && this.denominator == other.denominator;
+        }
+        return false;
+    }
+
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Nhập phân số thứ nhất:");
+        System.out.print("Tử số: ");
+        int numerator1 = scanner.nextInt();
+        System.out.print("Mẫu số: ");
+        int denominator1 = scanner.nextInt();
+        Solution fraction1 = new Solution(numerator1, denominator1);
+
+        System.out.println("Nhập phân số thứ hai:");
+        System.out.print("Tử số: ");
+        int numerator2 = scanner.nextInt();
+        System.out.print("Mẫu số: ");
+        int denominator2 = scanner.nextInt();
+        Solution fraction2 = new Solution(numerator2, denominator2);
+
+        Solution add = fraction1.add(fraction2);
+        System.out.println("Kết quả của phép cộng: " + add);
+
+        Solution minus = fraction1.subtract(fraction2);
+        System.out.println("Kết quả của phép trừ: " + minus);
+
+        Solution multiply = fraction1.multiply(fraction2);
+        System.out.println("Kết quả của phép nhân: " + multiply);
+
+        Solution divide = fraction1.divide(fraction2);
+        System.out.println("Kết quả của phép chia: " + divide);
+
+        boolean isEqual = fraction1.equals(fraction2);
+        if (isEqual) {
+            System.out.println("Hai phân số bằng nhau.");
+        } else {
+            System.out.println("Hai phân số không bằng nhau.");
+        }
+    }
+}
